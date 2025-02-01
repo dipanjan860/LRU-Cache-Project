@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRU Cache</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .cache-contents {
+            flex: 1;
+        }
+        .state-details {
+            flex: 1;
+            margin-left: 20px;
+        }
+        .search-history {
+            flex: 1;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>LRU Cache</h1>
+    <div>
+        <input type="number" id="capacity" placeholder="Capacity">
+        <button onclick="setCapacity()">Set Capacity</button>
+    </div>
+    <div>
+        <input type="text" id="value" placeholder="Value">
+        <button onclick="searchValue()">Search</button>
+    </div>
+    <div>
+        <button onclick="resetCache()">Reset</button>
+    </div>
+    <div id="result"></div>
+    <div class="container">
+        <div class="cache-contents">
+            <h2>Cache Contents</h2>
+            <ul id="cache-contents"></ul>
+        </div>
+        <div class="state-details">
+            <h2>State Details</h2>
+            <div id="state-details"></div>
+        </div>
+    </div>
+    <div class="search-history">
+        <h2>Search History</h2>
+        <ul id="search-history"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
