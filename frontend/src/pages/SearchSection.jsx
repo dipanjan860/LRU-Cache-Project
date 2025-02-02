@@ -3,6 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import indian_flag from "../assets/Indian_Flag.png";
 import indian_map from "../assets/Indian_Map.png";
 import StateCard from "../components/StateCard";
+import Notification from "../components/Notification";
 
 const search_value = "http://localhost:5000/search";
 const state_details = "http://localhost:5000/state_details";
@@ -67,15 +68,15 @@ function SearchSection({ updateCache }) {
         throw new Error("Failed to fetch data");
       }
       const result = await response.json();
-      console.log("API Response:", result); // Log the API response
+      console.log("API Response:", result);
       setResultMessage(
         `${result.message} (Response time: ${result.response_time.toFixed(
           2
         )} ms)`
       );
-      updateCache(); // Update cache after search
+      updateCache();
       if (result.value) {
-        fetchStateDetails(result.value.state_ut); // Pass the correct property
+        fetchStateDetails(result.value.state_ut);
       }
     } catch (err) {
       setError(err.message);
@@ -162,7 +163,7 @@ function SearchSection({ updateCache }) {
           />
         </div>
       )}
-      {error && <div className="text-center mt-4 text-red-500">{error}</div>}
+      {error && <Notification message={error} onClose={closeNotification} color="bg-red-500" />}
       {loading && <div className="text-center mt-4">Loading...</div>}
       {stateData && (
         <StateCard

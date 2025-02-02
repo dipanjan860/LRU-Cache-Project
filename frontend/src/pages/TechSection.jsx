@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import CacheCard from "../components/CacheCard";
 import { FaExclamation } from "react-icons/fa";
+import Notification from "../components/Notification";
 
-const reset_page = 'http://localhost:5000/reset';
-const cache_contents = 'http://localhost:5000/get_cache_contents';
+const reset_page = "http://localhost:5000/reset";
+const cache_contents = "http://localhost:5000/get_cache_contents";
 
 function TechSection({ cacheContents, updateCache }) {
   const [cacheCapacity, setCacheCapacity] = useState("");
-  const [resultMessage, setResultMessage] = useState("");
+  const [notification, setNotification] = useState(null);
 
   const handleInputChange = (event) => {
     setCacheCapacity(event.target.value);
@@ -25,11 +26,11 @@ function TechSection({ cacheContents, updateCache }) {
           body: JSON.stringify({ capacity }),
         });
         const result = await response.json();
-        setResultMessage(result.message);
+        setNotification(result.message);
         updateCache();
       } catch (error) {
         console.error("Error setting cache capacity:", error);
-        setResultMessage("Failed to set capacity");
+        setNotification("Failed to set capacity");
       }
     } else {
       alert("Please enter a valid positive integer for cache capacity.");
@@ -43,12 +44,16 @@ function TechSection({ cacheContents, updateCache }) {
         headers: { "Content-Type": "application/json" },
       });
       const result = await response.json();
-      setResultMessage(result.message);
+      setNotification(result.message);
       updateCache();
     } catch (error) {
       console.error("Error resetting cache:", error);
-      setResultMessage("Failed to reset cache");
+      setNotification("Failed to reset Cache");
     }
+  };
+
+  const closeNotification = () => {
+    setNotification(null);
   };
 
   return (
@@ -79,17 +84,30 @@ function TechSection({ cacheContents, updateCache }) {
           Set
         </button>
       </form>
-      {resultMessage && (
-        <p className="text-center text-lg text-green-600 mt-2">{resultMessage}</p>
+      {notification && (
+        <Notification
+          message={notification}
+          onClose={closeNotification}
+          color="bg-green-600"
+        />
       )}
       <div className="flex flex-col p-4">
         {cacheContents.length > 0 ? (
-          cacheContents.slice().reverse().map((item, index) => (
-            <CacheCard key={index} name={item.state_ut} keyValue={item.key} showArrow={index !== 0} />
-          ))          
+          cacheContents
+            .slice()
+            .reverse()
+            .map((item, index) => (
+              <CacheCard
+                key={index}
+                name={item.state_ut}
+                keyValue={item.key}
+                showArrow={index !== 0}
+              />
+            ))
         ) : (
           <div className="flex flex-col items-center justify-center text-gray-500 text-4xl font-semibold my-55">
-            <FaExclamation className="text-7xl mb-4" />No Cache Memory
+            <FaExclamation className="text-7xl mb-4" />
+            No Cache Memory
           </div>
         )}
       </div>

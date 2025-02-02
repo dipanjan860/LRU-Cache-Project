@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom"; // Import routing components
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import SearchSection from "./pages/SearchSection";
 import TechSection from "./pages/TechSection";
-import SearchHistory from "./pages/SearchHistory"; // Import the new SearchHistory page
+import SearchHistory from "./pages/SearchHistory";
 import About from "./pages/About";
+import Modal from "./components/Modal";
 
 function App() {
   const [cacheContents, setCacheContents] = useState([]);
+  const [isSearchHistoryOpen, setIsSearchHistoryOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   useEffect(() => {
     updateCacheContents();
@@ -23,12 +26,19 @@ function App() {
     }
   };
 
+  const toggleSearchHistory = () => {
+    setIsSearchHistoryOpen(!isSearchHistoryOpen);
+  };
+
+  const toggleAbout = () => {
+    setIsAboutOpen(!isAboutOpen);
+  };
+
   return (
     <BrowserRouter>
       <div>
-        <Navbar />
+        <Navbar toggleSearchHistory={toggleSearchHistory} toggleAbout={toggleAbout} />
         <Routes>
-          {/* Home Route */}
           <Route
             path="/"
             element={
@@ -43,8 +53,16 @@ function App() {
             }
           />
           <Route path="/about" element={<About />} />
-          <Route path="/search-history" element={<SearchHistory />} />
+          <Route path="/search-history" element={<SearchHistory updateSearchHistory={updateCacheContents} />} />
         </Routes>
+        {isSearchHistoryOpen && (
+          <div className="fixed top-0 right-0 h-full w-1/3 bg-white shadow-lg z-50 transition-transform transform duration-300 ease-in-out">
+            <SearchHistory toggleSearchHistory={toggleSearchHistory} updateSearchHistory={updateCacheContents} />
+          </div>
+        )}
+        <Modal isOpen={isAboutOpen} onClose={toggleAbout}>
+          <About />
+        </Modal>
       </div>
     </BrowserRouter>
   );
